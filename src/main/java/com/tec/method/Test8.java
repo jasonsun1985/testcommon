@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-
 public class Test8 {
     public static void main(String[] args) {
         testLambda();
@@ -52,20 +50,34 @@ public class Test8 {
     }
 
     private static void testOptional() {
-        Map<String,String> result = null;
+        Map<String, String> result = null;
         Optional<Map> o = Optional.ofNullable(result);
-        if (o.isPresent()){
+        System.out.println(o);
+        if (o.isPresent()) {
             System.out.println(o.get());
         } else {
             System.out.println("o is null");
         }
+        if (!o.isPresent()) {
+            System.out.println("o  i s  n u l l ");
+        }
+
         Object o1 = o.orElse(null);
-        System.out.println(o1);
+        System.out.println("o1 : " + o1);
+
+        Optional<Object> user = Optional.ofNullable(null);
+        System.out.println("user.isPresent() : " + user.isPresent());
+        o.ifPresent(o2 -> {
+                    //不进方法
+                    o2.put("a", "a");
+                    System.out.println("o2.get(\"a\") : " + o2.get(""));
+                }
+        );
         System.out.println("|||||||||||||||||||||||||||||||||testOptional||||||||||||||||||||||||||||");
     }
 
     private static void testBinaryOperator() {
-        System.out.println(BinaryOperator.maxBy(Integer::compareTo).apply(1,2));
+        System.out.println(BinaryOperator.maxBy(Integer::compareTo).apply(1, 2));
     }
 
     private static void testInstant() {
@@ -117,9 +129,11 @@ public class Test8 {
     private static BiFunction<String, String, Integer> getStringStringIntegerBiFunction() {
         return (s1, s2) -> s1.length() + s2.length();
     }
+
     private static class AA {
         private BigDecimal a;
         private BigDecimal b;
+
         public BigDecimal getA() {
             return a;
         }
@@ -136,6 +150,7 @@ public class Test8 {
             this.b = b;
         }
     }
+
     private static void testReduce() {
         int result1 = Stream.of(1, 2, 3).reduce(2, (x, y) -> x * y);
         System.out.println("result1 : " + result1);
@@ -152,7 +167,7 @@ public class Test8 {
         a.setA(new BigDecimal("2"));
         a.setB(new BigDecimal("3.20"));
         list.add(a);
-        Optional<BigDecimal> result = list.stream().map(b->b.getA().multiply(b.getB())).reduce(BigDecimal::add);
+        Optional<BigDecimal> result = list.stream().map(b -> b.getA().multiply(b.getB())).reduce(BigDecimal::add);
         BigDecimal bi = result.orElse(new BigDecimal("0"));
 
         System.out.println(bi);
@@ -168,7 +183,7 @@ public class Test8 {
     private static List<Integer> getNewList(List<Integer> list, Predicate<Integer> num) {
         return list.stream()
                 .filter(num)
-                .collect(toList());
+                .collect(Collectors.toList());
     }
 
     private static boolean cal(Integer num) {
@@ -201,7 +216,7 @@ public class Test8 {
                     String[] arr = item.split(" ");
                     return Arrays.asList(arr).stream();
                 })
-                .collect(toList())
+                .collect(Collectors.toList())
                 // 根据每一项的HashCode和equals方法做去重操作
 //				.distinct()
                 // 打印每一项
@@ -251,7 +266,7 @@ public class Test8 {
             Map<String, Integer> map = new HashMap<>();
             map.put("A", m);
             return map;
-        }).collect(toList()).forEach(r -> System.out.println(r));
+        }).collect(Collectors.toList()).forEach(r -> System.out.println(r));
         System.out.println("|||||||||||||||||||||||||||||||||||testMap||||||||||||||||||||||||||");
     }
 
