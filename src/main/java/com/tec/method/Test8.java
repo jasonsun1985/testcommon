@@ -123,6 +123,16 @@ public class Test8 {
             return Math.pow(r, 2) * Math.PI;
         };
         System.out.println(area.apply(10));
+
+
+        Function<Integer, Integer> times2 = i -> i*2;
+        Function<Integer, Integer> squared = i -> i*i;
+        System.out.println(times2.apply(4));
+        System.out.println(squared.apply(4));
+//      =32  先4×4然后16×2,先执行apply(4)，在times2的apply(16),先执行参数，再执行调用者
+        System.out.println(times2.compose(squared).apply(4));
+//      =64  先4×2,然后8×8,先执行times2的函数，在执行squared的函数
+        System.out.println(times2.andThen(squared).apply(4));
         System.out.println("|||||||||||||||||||||||||||||||||testFunction||||||||||||||||||||||||||||");
     }
 
@@ -297,7 +307,6 @@ public class Test8 {
         names.stream().map(String::toLowerCase).collect(Collectors.toList());
         System.out.println(Optional.ofNullable(null).orElse(10));
 
-        System.out.println("|||||||||||||||||||||||||||||||||||||testLambda||||||||||||||||||||||||");
         consumer1.accept("asdf");
         Supplier<Integer> integerSupplier = () -> new Random().nextInt();
         integerSupplier.get();
@@ -305,6 +314,7 @@ public class Test8 {
         //parallelStream多线程输出
         numbers.parallelStream().forEach(System.out::println);
         IntStream.range(0, 10).forEach(System.out::println);
+        System.out.println("|||||||||||||||||||||||||||||||||||||testLambda||||||||||||||||||||||||");
 
     }
 
