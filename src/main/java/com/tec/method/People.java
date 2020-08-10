@@ -6,34 +6,17 @@
  */
 package com.tec.method;
 
-/** 
- * @Description:
- * <p>创建日期：2017年8月30日 </p>
- * @version V1.0  
- * @author SUNLEI
- * @see
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class People {
 	String name;
 	int age;
-	public People(){
-	}
-	public People(String name, int age) {
-		super();
-		this.name = name;
-		this.age = age;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	
 }

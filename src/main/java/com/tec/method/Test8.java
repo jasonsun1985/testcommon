@@ -1,7 +1,9 @@
 package com.tec.method;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.tec.file.Person;
+import javafx.util.Pair;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,6 +14,8 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static com.google.common.collect.ImmutableMap.of;
 
 public class Test8 {
     public static void main(String[] args) {
@@ -34,6 +38,21 @@ public class Test8 {
         testOptional();
         testMatch();
         testBiConsumer();
+        testNullable();
+    }
+
+    private static void testNullable() {
+        List<Person> listPerson = null;
+        System.out.println(Optional.ofNullable(listPerson).orElse(Collections.EMPTY_LIST).size());
+        //NPE
+//        if(Optional.of(listPerson).isPresent()){
+//            System.out.println("Optional.of(listPerson).isPresent():pass");
+//        }
+        if (Optional.ofNullable(listPerson).isPresent()){
+            System.out.println("Optional.ofNullable(listPerson).isPresent():pass");
+        }
+        System.out.println("|||||||||||||||||||||||||||||||||testNullable||||||||||||||||||||||||||||");
+
     }
 
     private static void testBiConsumer() {
@@ -62,6 +81,7 @@ public class Test8 {
         System.out.println(bb);// FALSE
         System.out.println(cc);// FALSE
         System.out.println(count);// 4
+
         System.out.println("|||||||||||||||||||||||||||||||||testMatch||||||||||||||||||||||||||||");
 
 
@@ -91,6 +111,10 @@ public class Test8 {
                     System.out.println("o2.get(\"a\") : " + o2.get(""));
                 }
         );
+
+        List<People> peopleList = null;
+        peopleList = Optional.ofNullable(peopleList).orElse(Arrays.asList(new People("jason",19)));
+        System.out.println("peopleList.get(0).toString() : {}"+peopleList.get(0).toString());
         System.out.println("|||||||||||||||||||||||||||||||||testOptional||||||||||||||||||||||||||||");
     }
 
@@ -211,11 +235,18 @@ public class Test8 {
         List<Integer> newList = getNewList(list, Test8::cal,4);
         list.stream().sorted((a, b) -> a.compareTo(b));
         System.out.println(newList);
+        System.out.println("|||||||||||||||||||||||||||||||||testPredicate||||||||||||||||||||||||||||");
     }
 
     private static <A> List<Integer> getNewList(List<Integer> list, Predicate<Integer> num,A a) {
         return list.stream()
                 .filter(num)
+                .map(n->{
+                    if(a instanceof Integer){
+                        return n * (Integer)a;
+                    }
+                    return n;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -275,7 +306,9 @@ public class Test8 {
         //36
         System.out.println("|||||||||||||||||||||||||||||||||testComprehensive||||||||||||||||||||||||||||");
     }
+    public <T> void testClass(T t, List<? extends T> list, List<? super People> listP){
 
+    }
     /**
      * 返回一个丢弃原Stream的前N个元素后剩下元素组成的新Stream，如果原Stream中包含的元素个数小于N，那么返回空Stream
      */
@@ -300,6 +333,19 @@ public class Test8 {
             map.put("A", m);
             return map;
         }).collect(Collectors.toList()).forEach(r -> System.out.println(r));
+        ImmutableMap<Object, Object> ofImMap = of("A","优秀");
+        System.out.println("ImmutableMap : " + ofImMap);
+        List<Pair<String, Double>> listArray = new ArrayList<>();
+        listArray.add(new Pair<>("version", 1.1));
+        listArray.add(new Pair<>("version", 1.2));
+        listArray.add(new Pair<>("version", 1.3));
+        Map<String, Double> collect1 = listArray.stream().collect(Collectors.toMap(Pair::getKey, Pair::getValue, (k, v) -> v));
+        List<String> asList = Arrays.asList("A", "A", "B");
+        Map<Integer, String> collect2 = asList.stream().collect(Collectors.toMap(String::hashCode, String::trim, (k, v) -> v));
+        //Map<String, Double> : {version=1.3}
+        System.out.println("Map<String, Double> : " + collect1);
+        //Arrays.asList : {65=A, 66=B}
+        System.out.println("Arrays.asList : " + collect2);
         System.out.println("|||||||||||||||||||||||||||||||||||testMap||||||||||||||||||||||||||");
     }
 
