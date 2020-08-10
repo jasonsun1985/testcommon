@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 public class TestLambda {
     public static void main(String[] args) {
         Runnable r1 = () -> {
-            System.out.println("Hello Lambda 测试冲突!");
+            System.out.println("Hello Lambda Master!");
         };
         r1.run();
         List<String> names = new ArrayList<>();
