@@ -5,8 +5,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
-import java.util.Random;
-import java.util.stream.IntStream;
 
 public class DateTimeTest {
     public static void main(String[] args) {

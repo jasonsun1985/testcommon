@@ -1,10 +1,9 @@
 package com.tec.pattern.absfactory;
 
 /**
-* @Description: 圆形抽象类Circle
-* @author sunlei
-*
-*/
+ * @author sunlei
+ * @Description: 圆形抽象类Circle
+ */
 public abstract class Circle implements Shape {
-	public abstract void draw();
+    public abstract void draw();
 }

@@ -1,14 +1,13 @@
 package com.tec.pattern.simplefactory;
 
 /**
-* @Description: 具体产品角色
-* @author sunlei
-*
-*/
+ * @author sunlei
+ * @Description: 具体产品角色
+ */
 public class AudiCar implements Car {
 
-	public void drive() {
-		System.out.println("drive audi");
-	}
+    public void drive() {
+        System.out.println("drive audi");
+    }
 
 }

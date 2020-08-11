@@ -1,11 +1,11 @@
 package com.tec.pattern.absfactory;
 
 /**
-* @Description: 抽象工厂
-* @author sunlei
-*
-*/
+ * @author sunlei
+ * @Description: 抽象工厂
+ */
 public interface ShapeFactory {
-	public Shape getCircle();
-	public Shape getRectange();
+    public Shape getCircle();
+
+    public Shape getRectange();
 }

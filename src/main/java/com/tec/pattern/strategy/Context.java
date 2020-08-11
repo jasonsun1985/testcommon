@@ -9,7 +9,7 @@ public class Context {
         return this;
     }
 
-    public void go(){
+    public void go() {
         goForWork.gotoWork();
     }
 

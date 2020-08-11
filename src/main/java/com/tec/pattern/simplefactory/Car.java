@@ -1,10 +1,9 @@
 package com.tec.pattern.simplefactory;
 
 /**
-* @Description: 抽象产品
-* @author sunlei
-*
-*/
+ * @author sunlei
+ * @Description: 抽象产品
+ */
 public interface Car {
-	public void drive();
+    public void drive();
 }

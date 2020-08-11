@@ -48,7 +48,7 @@ public class Test8 {
 //        if(Optional.of(listPerson).isPresent()){
 //            System.out.println("Optional.of(listPerson).isPresent():pass");
 //        }
-        if (Optional.ofNullable(listPerson).isPresent()){
+        if (Optional.ofNullable(listPerson).isPresent()) {
             System.out.println("Optional.ofNullable(listPerson).isPresent():pass");
         }
         System.out.println("|||||||||||||||||||||||||||||||||testNullable||||||||||||||||||||||||||||");
@@ -57,8 +57,8 @@ public class Test8 {
 
     private static void testBiConsumer() {
         BiConsumer<Integer, Integer> integerBiConsumer = biConsumer();
-        integerBiConsumer.accept(10,20);
-        add("hello", "world",(a1,a2)-> System.out.println(a1+a2));
+        integerBiConsumer.accept(10, 20);
+        add("hello", "world", (a1, a2) -> System.out.println(a1 + a2));
         add(1, 2, biConsumer());
         System.out.println("|||||||||||||||||||||||||||||||||testBiConsumer||||||||||||||||||||||||||||");
 
@@ -68,9 +68,10 @@ public class Test8 {
         return (x, y) -> System.out.println(x + y);
     }
 
-    private static <S> void add(S a1,S a2,BiConsumer<S,S> c){
-        c.accept(a1,a2);
+    private static <S> void add(S a1, S a2, BiConsumer<S, S> c) {
+        c.accept(a1, a2);
     }
+
     private static void testMatch() {
         List<String> strs = Arrays.asList("a", "a", "a", "a", "b");
         boolean aa = strs.stream().anyMatch(str -> str.equals("a"));
@@ -113,8 +114,8 @@ public class Test8 {
         );
 
         List<People> peopleList = null;
-        peopleList = Optional.ofNullable(peopleList).orElse(Arrays.asList(new People("jason",19)));
-        System.out.println("peopleList.get(0).toString() : {}"+peopleList.get(0).toString());
+        peopleList = Optional.ofNullable(peopleList).orElse(Arrays.asList(new People("jason", 19)));
+        System.out.println("peopleList.get(0).toString() : {}" + peopleList.get(0).toString());
         System.out.println("|||||||||||||||||||||||||||||||||testOptional||||||||||||||||||||||||||||");
     }
 
@@ -166,8 +167,8 @@ public class Test8 {
         };
         System.out.println(area.apply(10));
 
-        Function<Integer, Integer> times2 = i -> i*2;
-        Function<Integer, Integer> squared = i -> i*i;
+        Function<Integer, Integer> times2 = i -> i * 2;
+        Function<Integer, Integer> squared = i -> i * i;
         System.out.println(times2.apply(4));
         System.out.println(squared.apply(4));
 //      =32  先4×4然后16×2,先执行apply(4)，在times2的apply(16),先执行参数，再执行调用者
@@ -232,18 +233,18 @@ public class Test8 {
 
     private static void testPredicate() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 67, 87, 123, 21, 32, 99);
-        List<Integer> newList = getNewList(list, Test8::cal,4);
+        List<Integer> newList = getNewList(list, Test8::cal, 4);
         list.stream().sorted((a, b) -> a.compareTo(b));
         System.out.println(newList);
         System.out.println("|||||||||||||||||||||||||||||||||testPredicate||||||||||||||||||||||||||||");
     }
 
-    private static <A> List<Integer> getNewList(List<Integer> list, Predicate<Integer> num,A a) {
+    private static <A> List<Integer> getNewList(List<Integer> list, Predicate<Integer> num, A a) {
         return list.stream()
                 .filter(num)
-                .map(n->{
-                    if(a instanceof Integer){
-                        return n * (Integer)a;
+                .map(n -> {
+                    if (a instanceof Integer) {
+                        return n * (Integer) a;
                     }
                     return n;
                 })
@@ -306,9 +307,11 @@ public class Test8 {
         //36
         System.out.println("|||||||||||||||||||||||||||||||||testComprehensive||||||||||||||||||||||||||||");
     }
-    public <T> void testClass(T t, List<? extends T> list, List<? super People> listP){
+
+    public <T> void testClass(T t, List<? extends T> list, List<? super People> listP) {
 
     }
+
     /**
      * 返回一个丢弃原Stream的前N个元素后剩下元素组成的新Stream，如果原Stream中包含的元素个数小于N，那么返回空Stream
      */
@@ -333,7 +336,7 @@ public class Test8 {
             map.put("A", m);
             return map;
         }).collect(Collectors.toList()).forEach(r -> System.out.println(r));
-        ImmutableMap<Object, Object> ofImMap = of("A","优秀");
+        ImmutableMap<Object, Object> ofImMap = of("A", "优秀");
         System.out.println("ImmutableMap : " + ofImMap);
         List<Pair<String, Double>> listArray = new ArrayList<>();
         listArray.add(new Pair<>("version", 1.1));

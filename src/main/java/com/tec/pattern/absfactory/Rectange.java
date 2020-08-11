@@ -1,9 +1,9 @@
 package com.tec.pattern.absfactory;
 
 /**
-* @Description: 长方形抽象类Rectange
-* @author sunlei
-*/
+ * @author sunlei
+ * @Description: 长方形抽象类Rectange
+ */
 public abstract class Rectange implements Shape {
-	public abstract void draw();
+    public abstract void draw();
 }

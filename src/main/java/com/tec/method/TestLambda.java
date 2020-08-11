@@ -18,10 +18,9 @@ import java.util.stream.Stream;
 
 
 /**
- * @Description:
- * <p>创建日期：2017年8月30日 </p>
- * @version V1.0
  * @author SUNLEI
+ * @version V1.0
+ * @Description: <p>创建日期：2017年8月30日 </p>
  * @see
  */
 public class TestLambda {
