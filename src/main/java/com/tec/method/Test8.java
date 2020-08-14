@@ -1,5 +1,7 @@
 package com.tec.method;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.tec.file.Person;
@@ -39,6 +41,22 @@ public class Test8 {
         testMatch();
         testBiConsumer();
         testNullable();
+        testGroupingBy();
+    }
+
+    private static void testGroupingBy() {
+        List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 89), new People("shawn", 39));
+        Map<String, List<People>> collect = peopleList.stream().collect(Collectors.groupingBy(People::getName));
+        System.out.println(JSONObject.parseObject(JSON.toJSONString(collect)));
+        final Integer[] jasonAges = new Integer[1];
+        collect.keySet().forEach(k->{
+        if (Objects.equals(k,"jason")) {
+            Optional<Integer> jason = collect.get("jason").stream().map(People::getAge).reduce(Integer::sum);
+            jasonAges[0] = jason.get();
+        }});
+        System.out.println(jasonAges[0]);
+
+
     }
 
     private static void testNullable() {
@@ -213,6 +231,9 @@ public class Test8 {
         System.out.println("result1 : " + result1);
         Optional<Integer> result2 = Stream.of(1, 2, 3).reduce((x, y) -> x * y);
         System.out.println("result2 : " + result2.orElse(-1));
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int reduce = Arrays.stream(numbers).reduce(0, (a1, a2) -> a1 + a2);
+        System.out.println("reduce :" + reduce);
 
 
         List<AA> list = new ArrayList<>();
