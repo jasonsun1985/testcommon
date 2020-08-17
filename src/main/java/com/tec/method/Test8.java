@@ -2,10 +2,10 @@ package com.tec.method;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import com.google.common.collect.*;
 import com.tec.file.Person;
 import javafx.util.Pair;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -42,12 +42,43 @@ public class Test8 {
         testBiConsumer();
         testNullable();
         testGroupingBy();
+        testSummarizingInt();
+
     }
 
+    private static void testSummarizingInt() {
+        List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 90));
+        Map<String, IntSummaryStatistics> collect1 = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.summarizingInt(People::getAge)));
+        System.out.println(collect1.get("jason").getMax());
+        System.out.println(collect1.get("jason").getMin());
+        System.out.println(collect1.get("jason").getAverage());
+        System.out.println(collect1.get("jason").getCount());
+        System.out.println(collect1.get("jason").getSum());
+        System.out.println("collect1: " + JSONObject.parseObject(JSON.toJSONString(collect1)));
+        Multimap<String, Integer> multiMap = ArrayListMultimap.create();
+
+        List<Integer> primes = Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29);
+        IntSummaryStatistics stats = primes.stream().mapToInt(v -> v).summaryStatistics();
+        System.out.println("Highest prime number in List : " + stats.getMax());
+        System.out.println("Lowest prime number in List : " + stats.getMin());
+        System.out.println("Sum of all prime numbers : " + stats.getSum());
+        System.out.println("Average of all prime numbers : " + stats.getAverage());
+
+        //{17=17, 2=2, 19=19, 3=3, 5=5, 23=23, 7=7, 11=11, 29=29, 13=13}
+        Map<Integer, Integer> collectMap1 = primes.stream().collect(Collectors.toMap(Function.identity(), i -> i));
+        System.out.println(collectMap1);
+
+        //{0=2, 1=3, 2=5, 3=7, 4=11, 5=13, 6=17, 7=19, 8=23, 9=29}
+        Map<Integer, Integer> collectMap2 = primes.stream().collect(Collectors.toMap(o -> primes.indexOf(o), i -> i));
+        System.out.println(collectMap2);
+        System.out.println("|||||||||||||||||||||||||||||||||testSummarizingInt||||||||||||||||||||||||||||");
+    }
+
+
     private static void testGroupingBy() {
-        List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 89), new People("shawn", 39));
+        List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 89));
         Map<String, List<People>> collect = peopleList.stream().collect(Collectors.groupingBy(People::getName));
-        System.out.println(JSONObject.parseObject(JSON.toJSONString(collect)));
+        System.out.println("collect:" + JSONObject.parseObject(JSON.toJSONString(collect)));
         final Integer[] jasonAges = new Integer[1];
         collect.keySet().forEach(k->{
         if (Objects.equals(k,"jason")) {
@@ -55,8 +86,8 @@ public class Test8 {
             jasonAges[0] = jason.get();
         }});
         System.out.println(jasonAges[0]);
-
-
+        Iterators.removeIf(peopleList.iterator(), StringUtils::isEmpty);
+        System.out.println("|||||||||||||||||||||||||||||||||testGroupingBy||||||||||||||||||||||||||||");
     }
 
     private static void testNullable() {
