@@ -1,5 +1,6 @@
 package com.tec.datetime;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,11 @@ public class DateTimeTest {
         System.out.println(localDate1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
         System.out.println(localDate1.format(formatter));
+        System.out.println(LocalDateTime.now());
+        System.out.println(System.currentTimeMillis());
+        System.out.println(LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
+        System.out.println(Timestamp.valueOf(LocalDateTime.now()).getTime());
+
 
     }
 

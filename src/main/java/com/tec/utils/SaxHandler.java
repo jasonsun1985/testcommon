@@ -18,7 +18,7 @@ public class SaxHandler extends DefaultHandler {
         SAXParser parser = factory.newSAXParser();
         // 3.获取需要解析的文档，生成解析器,最后解析文档
         File f = new File("D:\\test1.xml");
-        com.supervise.sddxb.common.utils.SaxHandler dh = new com.supervise.sddxb.common.utils.SaxHandler();
+        SaxHandler dh = new SaxHandler();
         parser.parse(f, dh);
     }
 
