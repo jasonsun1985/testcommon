@@ -123,10 +123,10 @@ public class Test8 {
 
     private static void testMatch() {
         List<String> strs = Arrays.asList("a", "a", "a", "a", "b");
-        boolean aa = strs.stream().anyMatch(str -> str.equals("a"));
-        boolean bb = strs.stream().allMatch(str -> str.equals("a"));
-        boolean cc = strs.stream().noneMatch(str -> str.equals("a"));
-        long count = strs.stream().filter(str -> str.equals("a")).count();
+        boolean aa = strs.stream().anyMatch(str -> "a".equals(str));
+        boolean bb = strs.stream().allMatch(str -> "a".equals(str));
+        boolean cc = strs.stream().noneMatch(str -> "a".equals(str));
+        long count = strs.stream().filter(str -> "a".equals(str)).count();
         System.out.println(aa);// TRUE
         System.out.println(bb);// FALSE
         System.out.println(cc);// FALSE
@@ -394,19 +394,32 @@ public class Test8 {
         listArray.add(new Pair<>("version", 1.1));
         listArray.add(new Pair<>("version", 1.2));
         listArray.add(new Pair<>("version", 1.3));
-        Map<String, Double> collect1 = listArray.stream().collect(Collectors.toMap(Pair::getKey, Pair::getValue, (k, v) -> v));
+        Map<String, Double> collect1 = listArray.stream().collect(Collectors.toMap(Pair::getKey, Pair::getValue, (k, v) -> k));
+        System.out.println("Map<String, Double> 1: " + collect1);
+        Map<String, Double> collect2 = listArray.stream().collect(Collectors.toMap(Pair::getKey, Pair::getValue, (k, v) -> v));
+        System.out.println("Map<String, Double> 2: " + collect2);
         List<String> asList = Arrays.asList("A", "A", "B");
-        Map<Integer, String> collect2 = asList.stream().collect(Collectors.toMap(String::hashCode, String::trim, (k, v) -> v));
+        Map<Integer, String> collect3 = asList.stream().collect(Collectors.toMap(String::hashCode, String::trim, (k, v) -> v));
         //Map<String, Double> : {version=1.3}
-        System.out.println("Map<String, Double> : " + collect1);
         //Arrays.asList : {65=A, 66=B}
-        System.out.println("Arrays.asList : " + collect2);
+        System.out.println("Arrays.asList : " + collect3);
         System.out.println("|||||||||||||||||||||||||||||||||||testMap||||||||||||||||||||||||||");
     }
 
     private static void testDistinct() {
         List<String> names = Lists.newArrayList("A", "B", "A");
         names.stream().distinct().collect(Collectors.toList()).forEach(System.out::println);
+
+        List<People> peopleList = Arrays.asList(new People("jason", 79),
+                new People("jason", 90),
+                new People("jason", 90),
+                new People("shawn", 90));
+
+        System.out.println("peopleList原长度：" + peopleList.size() + "\n distinct后 : " + peopleList.stream().distinct().collect(Collectors.toList()));
+
+//        peopleList.stream().collect(Collectors.)
+        new People("jason", 79);
+        System.out.println(new People("jason", 79));
         System.out.println("||||||||||||||||||||||||||||||||||||testDistinct|||||||||||||||||||||||||");
     }
 
