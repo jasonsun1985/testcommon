@@ -369,6 +369,7 @@ public class Test8 {
      */
     private static void testSkip() {
         List<Integer> nums = Lists.newArrayList(18, 2, 3, 4, 5, 6, 7, 50, 100);
+        //7 50 100
         nums.stream().skip(6).forEach(s -> System.out.println(s));
         System.out.println("|||||||||||||||||||||||||||||||||testSkip||||||||||||||||||||||||||||");
     }
