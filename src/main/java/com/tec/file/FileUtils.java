@@ -2,9 +2,11 @@ package com.tec.file;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Paths.get;
 
 public class FileUtils {
     /**
@@ -221,18 +223,20 @@ public class FileUtils {
     public static void readFilesNio(final String path) {
         try {
             //读取每行数据放入List中
-            List<String> lines1 = Files.readAllLines(Paths.get(path));
+            List<String> lines1 = Files.readAllLines(get(path));
             lines1.forEach(s -> System.out.println(s));
             //读取文件内容放入流中
-            Stream<String> lines2 = Files.lines(Paths.get(path));
+            Stream<String> lines2 = Files.lines(get(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void main(String[] args) {
-        readFilesNio("D:\\temp\\error.txt");
+    public static void main(String[] args) throws IOException {
+//        readFilesNio("D:\\temp\\error.txt");
+        byte[] bytes = readAllBytes(get("D:\\temp\\error.txt"));
+        System.out.println(new String(bytes));
     }
 
 }

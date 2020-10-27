@@ -92,11 +92,11 @@ public class Test8 {
 
     private static void testNullable() {
         List<Person> listPerson = null;
-        System.out.println(Optional.ofNullable(listPerson).orElse(Collections.EMPTY_LIST).size());
+//        listPerson = Optional.ofNullable(listPerson).orElse(Collections.EMPTY_LIST);
         //NPE
-//        if(Optional.of(listPerson).isPresent()){
-//            System.out.println("Optional.of(listPerson).isPresent():pass");
-//        }
+        if (Optional.of(listPerson).isPresent()) {
+            System.out.println("Optional.of(listPerson).isPresent():pass");
+        }
         if (Optional.ofNullable(listPerson).isPresent()) {
             System.out.println("Optional.ofNullable(listPerson).isPresent():pass");
         }
