@@ -117,7 +117,8 @@ public class Test8 {
         return (x, y) -> System.out.println(x + y);
     }
 
-    private static <S> void add(S a1, S a2, BiConsumer<S, S> c) {
+    private static <S, T> void add(S a1, T a2, BiConsumer<S, T> c) {
+        System.out.println(" <S,T> void add--");
         c.accept(a1, a2);
     }
 
