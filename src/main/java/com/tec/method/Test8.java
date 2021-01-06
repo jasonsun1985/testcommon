@@ -43,11 +43,22 @@ public class Test8 {
         testNullable();
         testGroupingBy();
         testSummarizingInt();
+        testFinance();
 
     }
 
+    private static void testFinance() {
+        BiFunction<Long, Double, Double> result = (a, b) -> a * Math.pow(1 + b, 10);
+        System.out.println(result.apply(1000000L, 0.06));
+        System.out.println("|||||||||||||||||||||||||||||||||testFinance||||||||||||||||||||||||||||");
+    }
+
+
     private static void testSummarizingInt() {
         List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 90));
+        int size = peopleList.stream().collect(Collectors.groupingBy(People::getName)).size();
+        System.out.println("peopleList :" + peopleList.size());
+        System.out.println("peopleList grouping by:" + size);
         Map<String, IntSummaryStatistics> collect1 = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.summarizingInt(People::getAge)));
         System.out.println(collect1.get("jason").getMax());
         System.out.println(collect1.get("jason").getMin());
@@ -94,9 +105,9 @@ public class Test8 {
         List<Person> listPerson = null;
 //        listPerson = Optional.ofNullable(listPerson).orElse(Collections.EMPTY_LIST);
         //NPE
-        if (Optional.of(listPerson).isPresent()) {
-            System.out.println("Optional.of(listPerson).isPresent():pass");
-        }
+//        if (Optional.of(listPerson).isPresent()) {
+//            System.out.println("Optional.of(listPerson).isPresent():pass");
+//        }
         if (Optional.ofNullable(listPerson).isPresent()) {
             System.out.println("Optional.ofNullable(listPerson).isPresent():pass");
         }
@@ -107,10 +118,39 @@ public class Test8 {
     private static void testBiConsumer() {
         BiConsumer<Integer, Integer> integerBiConsumer = biConsumer();
         integerBiConsumer.accept(10, 20);
+        int age = 20;
+        integerBiConsumer.andThen(biConsumer());
         add("hello", "world", (a1, a2) -> System.out.println(a1 + a2));
         add(1, 2, biConsumer());
+        Consumer<People> peopleConsumer = p -> {
+            p.setAge(p.getAge() + age);
+        };
+        People p = new People();
+//        peopleConsumer.accept(p);
+//        System.out.println("1 accept:"+p.getAge());
+        peopleConsumer.andThen(peopleConsumer).accept(p);//40
+
+        String[] array = {"迪丽热巴,女", "古力娜扎,女"};
+        Arrays.asList(array).stream().forEach((m) -> {
+            nameConsumer().andThen(ageConsumer()).accept(m);
+        });
+        System.out.println("2 accept:" + p.getAge());
         System.out.println("|||||||||||||||||||||||||||||||||testBiConsumer||||||||||||||||||||||||||||");
 
+    }
+
+    private static Consumer<String> nameConsumer() {
+        return (m) -> {
+            String name = m.split(",")[0];
+            System.out.println("姓名:" + name);
+        };
+    }
+
+    private static Consumer<String> ageConsumer() {
+        return (m) -> {
+            String age = m.split(",")[1];
+            System.out.println("年龄:" + age);
+        };
     }
 
     private static BiConsumer<Integer, Integer> biConsumer() {

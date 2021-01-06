@@ -9,6 +9,8 @@ package com.tec.utils;
 
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.springframework.util.Assert;
+import org.springframework.util.DigestUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -48,8 +50,24 @@ public class AESUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(decodeData("dda79e2f5044af4cbba536d9de160558cd1e08319941b7d3449a7f1945c0ffc79a450b3c73b1bbf52dffdce7d93d4e635d59e9bc39c108c4efa38a8c6c5267d9"));
+        Assert.isTrue(checkTrue(), "Assert异常信息");
+        String md5Password = DigestUtils.md5DigestAsHex("e6744f89c2e44bc".getBytes());
+        System.out.println(md5Password);
+        System.out.println(DigestUtils.md5DigestAsHex("e6744f89c2e44bc".getBytes()).equals(md5Password));
+
+        String zyzyyAESResult = encodeData("zyzyy");
+        System.out.println("加密结果：" + zyzyyAESResult);
+        System.out.println("解密结果：" + decodeData(zyzyyAESResult));
+
+
     }
+
+    private static boolean checkTrue() {
+        return false;
+    }
+//    public static void main(String[] args) {
+//        System.out.println(decodeData("dda79e2f5044af4cbba536d9de160558cd1e08319941b7d3449a7f1945c0ffc79a450b3c73b1bbf52dffdce7d93d4e635d59e9bc39c108c4efa38a8c6c5267d9"));
+//    }
 
     /**
      * 解密

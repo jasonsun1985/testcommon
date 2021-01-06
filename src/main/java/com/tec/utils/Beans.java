@@ -57,6 +57,8 @@ public class Beans {
 
 
     public static <T> List<T> batchTransform(final Class<T> clazz, List srcList) {
+//        Function<Object,T> result = src -> transform(clazz, src);
+//        return Lists.transform(srcList, result);
         return Lists.transform(srcList, new Function() {
             @Override
             public Object apply(Object src) {
