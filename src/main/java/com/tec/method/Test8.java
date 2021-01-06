@@ -129,14 +129,22 @@ public class Test8 {
 //        peopleConsumer.accept(p);
 //        System.out.println("1 accept:"+p.getAge());
         peopleConsumer.andThen(peopleConsumer).accept(p);//40
+        System.out.println("2 accept:" + p.getAge());
 
         String[] array = {"迪丽热巴,女", "古力娜扎,女"};
         Arrays.asList(array).stream().forEach((m) -> {
+            //两种写法
             nameConsumer().andThen(ageConsumer()).accept(m);
+            getConsumerConsumerBiConsumer(m).accept(nameConsumer(), ageConsumer());
         });
-        System.out.println("2 accept:" + p.getAge());
         System.out.println("|||||||||||||||||||||||||||||||||testBiConsumer||||||||||||||||||||||||||||");
 
+    }
+
+    private static BiConsumer<Consumer, Consumer> getConsumerConsumerBiConsumer(String s) {
+        return (x, y) -> {
+            x.andThen(y).accept(s);
+        };
     }
 
     private static Consumer<String> nameConsumer() {
