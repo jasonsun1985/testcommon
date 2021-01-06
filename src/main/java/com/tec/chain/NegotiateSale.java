@@ -1,12 +1,12 @@
-package com.tec.utils.chain;
+package com.tec.chain;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 
-public class CloseSale implements Command {
+public class NegotiateSale implements Command {
     @Override
     public boolean execute(Context ctx) throws Exception {
-        System.out.println("Congratulations " + ctx.get("customerName") + ", you bought a new car!");
+        System.out.println("Negotiate sale");
         return false;
     }
 

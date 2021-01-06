@@ -1,4 +1,4 @@
-package com.tec.utils.chain;
+package com.tec.chain;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;

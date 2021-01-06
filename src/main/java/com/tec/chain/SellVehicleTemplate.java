@@ -1,4 +1,4 @@
-package com.tec.utils.chain;
+package com.tec.chain;
 
 /**
  * @author sunlei
