@@ -44,7 +44,16 @@ public class Test8 {
         testGroupingBy();
         testSummarizingInt();
         testFinance();
+        testJoin();
 
+    }
+
+    private static void testJoin() {
+        StringJoiner sj = new StringJoiner("\",\"", "[\"", "\"]");
+        sj.add("JASON").add("TOM").add("Everything");
+        String desiredString = sj.toString();
+        System.out.println(desiredString);
+        System.out.println("|||||||||||||||||||||||||||||||||testJoin||||||||||||||||||||||||||||");
     }
 
     private static void testFinance() {
@@ -91,11 +100,12 @@ public class Test8 {
         Map<String, List<People>> collect = peopleList.stream().collect(Collectors.groupingBy(People::getName));
         System.out.println("collect:" + JSONObject.parseObject(JSON.toJSONString(collect)));
         final Integer[] jasonAges = new Integer[1];
-        collect.keySet().forEach(k->{
-        if (Objects.equals(k,"jason")) {
-            Optional<Integer> jason = collect.get("jason").stream().map(People::getAge).reduce(Integer::sum);
-            jasonAges[0] = jason.get();
-        }});
+        collect.keySet().forEach(k -> {
+            if (Objects.equals(k, "jason")) {
+                Optional<Integer> jason = collect.get("jason").stream().map(People::getAge).reduce(Integer::sum);
+                jasonAges[0] = jason.get();
+            }
+        });
         System.out.println(jasonAges[0]);
         Iterators.removeIf(peopleList.iterator(), StringUtils::isEmpty);
         System.out.println("|||||||||||||||||||||||||||||||||testGroupingBy||||||||||||||||||||||||||||");
