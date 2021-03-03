@@ -45,7 +45,6 @@ public class Test8 {
         testSummarizingInt();
         testFinance();
         testJoin();
-
     }
 
     private static void testJoin() {
@@ -53,7 +52,6 @@ public class Test8 {
         sj.add("JASON").add("TOM").add("Everything");
         String desiredString = sj.toString();
         System.out.println(desiredString);
-
         System.out.println("|||||||||||||||||||||||||||||||||testJoin||||||||||||||||||||||||||||");
     }
 
