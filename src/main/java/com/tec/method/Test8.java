@@ -189,7 +189,10 @@ public class Test8 {
         System.out.println(bb);// FALSE
         System.out.println(cc);// FALSE
         System.out.println(count);// 4
-
+        Byte b = 5;
+        Arrays.stream(ConsultationTypeEnums.values()).filter(v -> !v.equals(ConsultationTypeEnums.OWN_EXPENSE)).forEach(v -> System.out.println(v));
+        boolean booleanResult = Arrays.stream(ConsultationTypeEnums.values()).filter(v -> !v.equals(ConsultationTypeEnums.OWN_EXPENSE)).anyMatch(v -> v.getToByte().equals(b));
+        System.out.println("booleanResult : " + booleanResult);
         System.out.println("|||||||||||||||||||||||||||||||||testMatch||||||||||||||||||||||||||||");
 
 
