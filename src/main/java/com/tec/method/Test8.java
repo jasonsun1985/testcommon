@@ -45,6 +45,19 @@ public class Test8 {
         testSummarizingInt();
         testFinance();
         testJoin();
+        testComparator();
+    }
+
+    private static void testComparator() {
+        List l1 = new ArrayList();
+        l1.add(new People("A", 10));
+        l1.add(new People("A", 30));
+        l1.add(new People("A", 40));
+        //以上db查询出来的
+        l1.add(new People("R", 25));
+        l1.sort(Comparator.comparing(People::getAge));
+        l1.forEach(p-> System.out.println(p.toString()));
+        System.out.println("排名为:"+(l1.indexOf(new People("1R", 25))+1));
     }
 
     private static void testJoin() {
@@ -348,6 +361,8 @@ public class Test8 {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 67, 87, 123, 21, 32, 99);
         List<Integer> newList = getNewList(list, Test8::cal, 4);
         list.stream().sorted((a, b) -> a.compareTo(b));
+        Predicate<List<Integer>> pp = l -> l.size() > 100;
+        System.out.println(pp.test(list));
         System.out.println(newList);
         System.out.println("|||||||||||||||||||||||||||||||||testPredicate||||||||||||||||||||||||||||");
     }
@@ -369,7 +384,7 @@ public class Test8 {
     }
 
     private static void testFlatMap() {
-        List<String> words = Arrays.asList("hello world", "hello java", "hello hello");
+        List<String> words = Arrays.asList("hello world", "hello java", "hello hello");
         words.stream().flatMap(w -> {
             return Stream.of(w + " copy");
         }).collect(Collectors.toList());
@@ -379,7 +394,7 @@ public class Test8 {
 		/*words.stream()
 				// 对words的每一项都做切割操作，把每一个字符串都转换为数组
 				// 执行完后数据结构如下{["hello","world"],["hello","java"],["hello","hello"]}
-				.map(item -> item.split(" "))
+				.map(item -> item.split(" "))
 				// 对每个数组做单独的遍历操作
 				.forEach(arr -> {
 					for (String item : arr) {
