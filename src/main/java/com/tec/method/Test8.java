@@ -64,21 +64,24 @@ public class Test8 {
         StringJoiner sj = new StringJoiner("\",\"", "[\"", "\"]");
         sj.add("JASON").add("TOM").add("Everything");
         String desiredString = sj.toString();
+        //["JASON","TOM","Everything"]
         System.out.println(desiredString);
         System.out.println("|||||||||||||||||||||||||||||||||testJoin||||||||||||||||||||||||||||");
     }
 
     private static void testFinance() {
         BiFunction<Long, Double, Double> result = (a, b) -> a * Math.pow(1 + b, 10);
+        //1790847.6965428547
         System.out.println(result.apply(1000000L, 0.06));
         System.out.println("|||||||||||||||||||||||||||||||||testFinance||||||||||||||||||||||||||||");
     }
 
-
     private static void testSummarizingInt() {
         List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 90));
         int size = peopleList.stream().collect(Collectors.groupingBy(People::getName)).size();
+        //peopleList :2
         System.out.println("peopleList :" + peopleList.size());
+        //peopleList grouping by:1
         System.out.println("peopleList grouping by:" + size);
         Map<String, IntSummaryStatistics> collect1 = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.summarizingInt(People::getAge)));
         System.out.println(collect1.get("jason").getMax());
@@ -86,6 +89,7 @@ public class Test8 {
         System.out.println(collect1.get("jason").getAverage());
         System.out.println(collect1.get("jason").getCount());
         System.out.println(collect1.get("jason").getSum());
+        //collect1: {"jason":{"average":84.5,"min":79,"max":90,"count":2,"sum":169}}
         System.out.println("collect1: " + JSONObject.parseObject(JSON.toJSONString(collect1)));
         Multimap<String, Integer> multiMap = ArrayListMultimap.create();
 
