@@ -2,10 +2,8 @@ package com.tec.method;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.*;
 import com.tec.file.Person;
 import javafx.util.Pair;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,8 +14,6 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import static com.google.common.collect.ImmutableMap.of;
 
 public class Test8 {
     public static void main(String[] args) {
@@ -46,6 +42,22 @@ public class Test8 {
         testFinance();
         testJoin();
         testComparator();
+        testUnaryOperator();
+    }
+
+    private static void testUnaryOperator() {
+        UnaryOperator<Integer> unaryOperator = x -> x + 10;
+        BinaryOperator<Integer> binaryOperator = (x, y) -> x + y;
+
+        System.out.println(unaryOperator.apply(10)); //20
+        System.out.println(binaryOperator.apply(5, 10)); //15
+
+        //继续看看BinaryOperator提供的两个静态方法   也挺好用的
+        BinaryOperator<Integer> min = BinaryOperator.minBy(Integer::compare);
+        BinaryOperator<Integer> max = BinaryOperator.maxBy(Integer::compareTo);
+        System.out.println("min.apply : " + min.apply(10, 20)); //10
+        System.out.println("max.apply : " + max.apply(10, 20)); //20
+        System.out.println("|||||||||||||||||||||||||||||||||testUnaryOperator||||||||||||||||||||||||||||||||");
     }
 
     private static void testComparator() {
@@ -56,8 +68,13 @@ public class Test8 {
         //以上db查询出来的
         l1.add(new People("R", 25));
         l1.sort(Comparator.comparing(People::getAge));
-        l1.forEach(p-> System.out.println(p.toString()));
-        System.out.println("排名为:"+(l1.indexOf(new People("1R", 25))+1));
+        l1.forEach(p -> System.out.println(p.toString()));
+        System.out.println("排名为:" + (l1.indexOf(new People("1R", 25)) + 1));
+        DoubleList doubleList = new DoubleList();
+        doubleList.setStatusList(Arrays.asList(1, 2, 3, 4, 5));
+        doubleList.setIds(Arrays.asList(11L, 12L, 15L));
+        System.out.println(JSON.toJSON(doubleList));
+        System.out.println("|||||||||||||||||||||||||||||||||testComparator||||||||||||||||||||||||||||||||");
     }
 
     private static void testJoin() {
@@ -77,7 +94,9 @@ public class Test8 {
     }
 
     private static void testSummarizingInt() {
-        List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 90));
+        List<People> peopleList = Arrays.asList(new People("jason", 79)
+                , new People("jason", 90)
+                , new People("Hanna", 98));
         int size = peopleList.stream().collect(Collectors.groupingBy(People::getName)).size();
         //peopleList :2
         System.out.println("peopleList :" + peopleList.size());
@@ -91,7 +110,7 @@ public class Test8 {
         System.out.println(collect1.get("jason").getSum());
         //collect1: {"jason":{"average":84.5,"min":79,"max":90,"count":2,"sum":169}}
         System.out.println("collect1: " + JSONObject.parseObject(JSON.toJSONString(collect1)));
-        Multimap<String, Integer> multiMap = ArrayListMultimap.create();
+//        Multimap<String, Integer> multiMap = ArrayListMultimap.create();
 
         List<Integer> primes = Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29);
         IntSummaryStatistics stats = primes.stream().mapToInt(v -> v).summaryStatistics();
@@ -112,6 +131,15 @@ public class Test8 {
 
 
     private static void testGroupingBy() {
+        List<User> users = Arrays.asList(new User("zhangsan", 20, "TJ"),
+                new User("wangwu", 30, "BJ"),
+                new User("heliu", 30, "NJ"),
+                new User("guijiaoqi", 30, "NJ"));
+
+
+        TreeMap<String, Set<String>> collect1 = users.stream().collect(Collectors.groupingBy(User::getCityName, TreeMap::new,
+                Collectors.mapping(User::getName, Collectors.toSet())));
+        System.out.println("collect1 :" + collect1);
         List<People> peopleList = Arrays.asList(new People("jason", 79), new People("jason", 89));
         Map<String, List<People>> collect = peopleList.stream().collect(Collectors.groupingBy(People::getName));
         System.out.println("collect:" + JSONObject.parseObject(JSON.toJSONString(collect)));
@@ -123,7 +151,10 @@ public class Test8 {
             }
         });
         System.out.println(jasonAges[0]);
-        Iterators.removeIf(peopleList.iterator(), StringUtils::isEmpty);
+//        Iterators.removeIf(peopleList.iterator(), StringUtils::isEmpty);
+
+        Map<String, Map<String, IntSummaryStatistics>> collect2 = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.groupingBy(People::getName, Collectors.summarizingInt(People::getAge))));
+        System.out.println("collect2 : " + collect2);
         System.out.println("|||||||||||||||||||||||||||||||||testGroupingBy||||||||||||||||||||||||||||");
     }
 
@@ -248,6 +279,7 @@ public class Test8 {
 
     private static void testBinaryOperator() {
         System.out.println(BinaryOperator.maxBy(Integer::compareTo).apply(1, 2));
+        System.out.println("|||||||||||||||||||||||||||||||||testBinaryOperator||||||||||||||||||||||||||||");
     }
 
     private static void testInstant() {
@@ -392,6 +424,11 @@ public class Test8 {
         words.stream().flatMap(w -> {
             return Stream.of(w + " copy");
         }).collect(Collectors.toList());
+        /**
+         * peek : hello world
+         * peek : hello java
+         * peek : hello hello
+         */
         words.stream().peek(w -> System.out.println("peek : " + w)).collect(Collectors.toList());
 
         List<String> wordList = Arrays.asList("aa", "bb", "cc");
@@ -410,19 +447,75 @@ public class Test8 {
                 // 然后这个函数把所有的List里面的字符串都取出来放在了一个集合中，这个集合做下一次执行的数据源
                 // {"hello","world","hello","java","hello","hello"}
                 .flatMap(item -> {
-                    String[] arr = item.split(" ");
+                    String[] arr = item.split(" ");
                     return Arrays.asList(arr).stream();
                 })
                 .collect(Collectors.toList())
                 // 根据每一项的HashCode和equals方法做去重操作
 //				.distinct()
                 // 打印每一项
+                /**
+                 * hello
+                 * world
+                 * hello
+                 * java
+                 * hello
+                 * hello
+                 */
                 .forEach(item -> System.out.println(item));
+
+        List<String> teamIndia = Arrays.asList("Virat", "Dhoni", "Jadeja");
+        List<String> teamAustralia = Arrays.asList("Warner", "Watson", "Smith");
+        List<String> teamEngland = Arrays.asList("Alex", "Bell", "Broad");
+        List<String> teamNewZeland = Arrays.asList("Kane", "Nathan", "Vettori");
+        List<String> teamSouthAfrica = Arrays.asList("AB", "Amla", "Faf");
+        List<String> teamWestIndies = Arrays.asList("Sammy", "Gayle", "Narine");
+        List<String> teamSriLanka = Arrays.asList("Mahela", "Sanga", "Dilshan");
+        List<String> teamPakistan = Arrays.asList("Misbah", "Afridi", "Shehzad");
+
+        List<List<String>> playersInWorldCup2016 = new ArrayList<>();
+        playersInWorldCup2016.add(teamIndia);
+        playersInWorldCup2016.add(teamAustralia);
+        playersInWorldCup2016.add(teamEngland);
+        playersInWorldCup2016.add(teamNewZeland);
+        playersInWorldCup2016.add(teamSouthAfrica);
+        playersInWorldCup2016.add(teamWestIndies);
+        playersInWorldCup2016.add(teamSriLanka);
+        playersInWorldCup2016.add(teamPakistan);
+
+        // Let's print all players before Java 8
+        List<String> listOfAllPlayers = new ArrayList<>();
+
+        for (List<String> team : playersInWorldCup2016) {
+            for (String name : team) {
+                listOfAllPlayers.add(name);
+            }
+        }
+
+        System.out.println("Players playing in world cup 2016");
+        System.out.println(listOfAllPlayers);
+
+
+        // Now let's do this in Java 8 using FlatMap
+        List<String> flatMapList = playersInWorldCup2016.stream()
+                .flatMap(pList -> pList.stream())
+                .collect(Collectors.toList());
+
+        System.out.println("List of all Players using Java 8");
+        System.out.println(flatMapList);
+
+        List<Person> l1 = Arrays.asList(new Person("A", 10), new Person("B", 20));
+        List<Person> l2 = Arrays.asList(new Person("C", 30), new Person("D", 40));
+        List<List<Person>> l3 = new ArrayList<>();
+        l3.add(l1);
+        l3.add(l2);
+        List<Person> collect = l3.stream().flatMap(lsub -> lsub.stream()).collect(Collectors.toList());
+        System.out.println("l3:" + JSON.toJSON(collect));
         System.out.println("||||||||||||||||||||||||||||||||testFlatMap|||||||||||||||||||||||||||||");
     }
 
     private static void testComprehensive() {
-        List<Integer> nums = Lists.newArrayList(1, 1, null, 2, 3, 4, null, 5, 6, 7, 8, 9, 10);
+        List<Integer> nums = Arrays.asList(1, 1, null, 2, 3, 4, null, 5, 6, 7, 8, 9, 10);
         System.out.println("sum is:" + nums.stream().filter(num -> num != null)
                 //1,1,2,3,4,5,6,7,8,9,10
                 //.peek(x -> System.out.println("peek0: "+x))
@@ -448,20 +541,20 @@ public class Test8 {
      * 返回一个丢弃原Stream的前N个元素后剩下元素组成的新Stream，如果原Stream中包含的元素个数小于N，那么返回空Stream
      */
     private static void testSkip() {
-        List<Integer> nums = Lists.newArrayList(18, 2, 3, 4, 5, 6, 7, 50, 100);
+        List<Integer> nums = Arrays.asList(18, 2, 3, 4, 5, 6, 7, 50, 100);
         //7 50 100
         nums.stream().skip(6).forEach(s -> System.out.println(s));
         System.out.println("|||||||||||||||||||||||||||||||||testSkip||||||||||||||||||||||||||||");
     }
 
     private static void testLimit() {
-        List<Integer> nums = Lists.newArrayList(18, 2, 3, 4, 5, 6, 7, 50, 100);
+        List<Integer> nums = Arrays.asList(18, 2, 3, 4, 5, 6, 7, 50, 100);
         nums.stream().limit(6).forEach(System.out::println);
         System.out.println("|||||||||||||||||||||||||||||||||testLimit||||||||||||||||||||||||||||");
     }
 
     private static void testMap() {
-        List<Integer> nums = Lists.newArrayList(50, 100);
+        List<Integer> nums = Arrays.asList(50, 100);
 //		nums.stream().peek(e -> System.out.println(e*100));
         nums.stream().map(n -> "成绩" + n.toString()).forEach(System.out::println);
         nums.stream().map(m -> {
@@ -469,8 +562,7 @@ public class Test8 {
             map.put("A", m);
             return map;
         }).collect(Collectors.toList()).forEach(r -> System.out.println(r));
-        ImmutableMap<Object, Object> ofImMap = of("A", "优秀");
-        System.out.println("ImmutableMap : " + ofImMap);
+
         List<Pair<String, Double>> listArray = new ArrayList<>();
         listArray.add(new Pair<>("version", 1.1));
         listArray.add(new Pair<>("version", 1.2));
@@ -488,7 +580,7 @@ public class Test8 {
     }
 
     private static void testDistinct() {
-        List<String> names = Lists.newArrayList("A", "B", "A");
+        List<String> names = Arrays.asList("A", "B", "A");
         names.stream().distinct().collect(Collectors.toList()).forEach(System.out::println);
 
         List<People> peopleList = Arrays.asList(new People("jason", 79),
@@ -517,7 +609,7 @@ public class Test8 {
     }
 
     private static void testLambda() {
-        List<String> names = Lists.newArrayList("A", "B");
+        List<String> names = Arrays.asList("A", "B");
         names.stream().map((String n1) -> {
             return n1.toLowerCase();
         }).collect(Collectors.toList());
