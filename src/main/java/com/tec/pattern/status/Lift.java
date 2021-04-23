@@ -7,10 +7,10 @@ package com.tec.pattern.status;
  * @Date 2021/4/23 15:59
  **/
 public class Lift {
-    static final State openningState = new OpenningState();
-    static final State closingState = new ClosingState();
-    static final State runningState = new RunningState();
-    static final State stoppingState = new StoppingState();
+    static final State OPENNING_STATE = new OpenningState();
+    static final State CLOSING_STATE = new ClosingState();
+    static final State RUNNING_STATE = new RunningState();
+    static final State STOPPING_STATE = new StoppingState();
 
     private State state;
 

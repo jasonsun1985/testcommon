@@ -28,7 +28,7 @@ public class RunningState extends State {
 
     @Override
     public void stop() {
-        this.context.switchState(Lift.stoppingState);
+        this.context.switchState(Lift.STOPPING_STATE);
         this.context.stop();
     }
 }

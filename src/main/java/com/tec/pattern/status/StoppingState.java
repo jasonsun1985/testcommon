@@ -13,7 +13,7 @@ public class StoppingState extends State {
 
     @Override
     public void open() {
-        this.context.switchState(Lift.openningState);
+        this.context.switchState(Lift.OPENNING_STATE);
         this.context.open();
     }
 
@@ -24,7 +24,7 @@ public class StoppingState extends State {
 
     @Override
     public void run() {
-        this.context.switchState(Lift.runningState);
+        this.context.switchState(Lift.RUNNING_STATE);
         this.context.run();
     }
 

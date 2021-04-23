@@ -18,7 +18,7 @@ public class OpenningState extends State {
 
     @Override
     public void close() {
-        this.context.switchState(Lift.closingState);
+        this.context.switchState(Lift.CLOSING_STATE);
         this.context.close();
     }
 
