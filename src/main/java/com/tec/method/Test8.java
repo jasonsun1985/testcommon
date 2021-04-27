@@ -71,7 +71,7 @@ public class Test8 {
 
     private static void testComparator() {
         List l1 = new ArrayList();
-        People people = new People("R", 30);
+        People people = new People("A", 30);
         l1.add(people);
         List l2 = new ArrayList();
         l1.add(new People("A", 10));
@@ -89,11 +89,13 @@ public class Test8 {
         l2.addAll(l1);
         l2.sort(Comparator.comparing(People::getAge));
         System.out.println("正序排名为:" + (l2.indexOf(people) + 1));
-
+        List<People> newSorted =  (List<People>)l1.stream().sorted(Comparator.comparing(People::getAge).thenComparing((People::getName))).collect(Collectors.toList());
         DoubleList doubleList = new DoubleList();
         doubleList.setStatusList(Arrays.asList(1, 2, 3, 4, 5));
         doubleList.setIds(Arrays.asList(11L, 12L, 15L));
         System.out.println(JSON.toJSON(doubleList));
+
+        System.out.println("按照两个字段正排： "+(newSorted.indexOf(people)+1));
         System.out.println("|||||||||||||||||||||||||||||||||testComparator||||||||||||||||||||||||||||||||");
     }
 
