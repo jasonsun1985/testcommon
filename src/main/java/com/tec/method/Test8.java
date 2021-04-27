@@ -63,13 +63,16 @@ public class Test8 {
     private static void testComparator() {
         List l1 = new ArrayList();
         l1.add(new People("A", 10));
-        l1.add(new People("A", 30));
-        l1.add(new People("A", 40));
+        l1.add(new People("B", 30));
+        l1.add(new People("C", 40));
+        l1.add(new People("D", 21));
+        l1.add(new People("E", 42));
         //以上db查询出来的
-        l1.add(new People("R", 25));
-        l1.sort(Comparator.comparing(People::getAge));
+        People people = new People("R", 80);
+        l1.add(people);
+        l1.sort(Comparator.comparing(People::getAge).reversed());
         l1.forEach(p -> System.out.println(p.toString()));
-        System.out.println("排名为:" + (l1.indexOf(new People("1R", 25)) + 1));
+        System.out.println("排名为:" + (l1.indexOf(people) + 1));
         DoubleList doubleList = new DoubleList();
         doubleList.setStatusList(Arrays.asList(1, 2, 3, 4, 5));
         doubleList.setIds(Arrays.asList(11L, 12L, 15L));

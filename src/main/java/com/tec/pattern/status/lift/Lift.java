@@ -1,4 +1,4 @@
-package com.tec.pattern.status;
+package com.tec.pattern.status.lift;
 
 /**
  * @ClassName Lift
