@@ -43,6 +43,15 @@ public class Test8 {
         testJoin();
         testComparator();
         testUnaryOperator();
+        testcompareTo();
+    }
+
+    private static void testcompareTo() {
+        String a = "c";
+        boolean r = a.compareTo("b") > 0;
+        System.out.println(r);
+        System.out.println("|||||||||||||||||||||||||||||||||testcompareTo||||||||||||||||||||||||||||||||");
+
     }
 
     private static void testUnaryOperator() {
@@ -62,17 +71,25 @@ public class Test8 {
 
     private static void testComparator() {
         List l1 = new ArrayList();
+        People people = new People("R", 30);
+        l1.add(people);
+        List l2 = new ArrayList();
         l1.add(new People("A", 10));
         l1.add(new People("B", 30));
-        l1.add(new People("C", 40));
-        l1.add(new People("D", 21));
+        l1.add(new People("C", 30));
+        l1.add(new People("D", 30));
         l1.add(new People("E", 42));
-        //以上db查询出来的
-        People people = new People("R", 80);
-        l1.add(people);
+        //以上db查询出来的  数值与内部值相同，待排名对象放前面就排前面，放后面就排后面
+//        People people = new People("R", 30);
+//        l1.add(people);
         l1.sort(Comparator.comparing(People::getAge).reversed());
         l1.forEach(p -> System.out.println(p.toString()));
-        System.out.println("排名为:" + (l1.indexOf(people) + 1));
+        System.out.println("倒序排名为:" + (l1.indexOf(people) + 1));
+
+        l2.addAll(l1);
+        l2.sort(Comparator.comparing(People::getAge));
+        System.out.println("正序排名为:" + (l2.indexOf(people) + 1));
+
         DoubleList doubleList = new DoubleList();
         doubleList.setStatusList(Arrays.asList(1, 2, 3, 4, 5));
         doubleList.setIds(Arrays.asList(11L, 12L, 15L));
