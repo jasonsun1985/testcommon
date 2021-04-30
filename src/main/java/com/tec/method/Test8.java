@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tec.file.Person;
 import javafx.util.Pair;
+import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,6 +47,41 @@ public class Test8 {
         testComparator();
         testUnaryOperator();
         testcompareTo();
+        testCompletableFuture();
+    }
+
+    private static void testCompletableFuture() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("testCompletableFuture");
+        CompletableFuture<People> completableFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return new People("jason",10);
+        });
+        CompletableFuture<People> completableFuture1 = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return new People("harry",20);
+        });
+        CompletableFuture.allOf(completableFuture, completableFuture1);
+        stopWatch.stop();
+        try {
+            Optional.ofNullable(completableFuture.get()).ifPresent(people -> System.out.println(JSON.toJSON(people)));
+            Optional.ofNullable(completableFuture1.get()).ifPresent(people -> System.out.println(JSON.toJSON(people)));
+            stopWatch.prettyPrint();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        System.out.println("|||||||||||||||||||||||||||||||||testCompletableFuture||||||||||||||||||||||||||||||||");
+
     }
 
     private static void testcompareTo() {
