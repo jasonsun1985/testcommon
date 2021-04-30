@@ -3,6 +3,7 @@ package com.tec.cas;
 
 import com.alibaba.fastjson.JSON;
 import com.tec.method.People;
+import org.springframework.util.StopWatch;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicStampedReference;
@@ -16,6 +17,8 @@ public class ABAPeopleDemo {
     static AtomicStampedReference<Integer> reference = new AtomicStampedReference<>(DEFAULT_NUM, DEFAULT_STAMP);
 
     public static void main(String[] args) throws InterruptedException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start("ABAPeopleDemo 耗时");
         new Thread(() -> {
             int stamp = reference.getStamp();
             System.out.println("第1次版本号:" + stamp);
@@ -49,6 +52,9 @@ public class ABAPeopleDemo {
             }
         }, "T3").start();
         TimeUnit.SECONDS.sleep(3);
+        stopWatch.stop();
+        System.out.println(stopWatch.prettyPrint());
+        System.out.println(stopWatch.getTotalTimeSeconds());
         System.out.println("最终信息为：" + reference.getReference() + "  " + reference.getStamp());
     }
 }
