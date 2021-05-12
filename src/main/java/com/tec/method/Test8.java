@@ -7,6 +7,7 @@ import javafx.util.Pair;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +49,19 @@ public class Test8 {
         testUnaryOperator();
         testcompareTo();
         testCompletableFuture();
+        testListToArray();
+    }
+
+    private static void testListToArray() {
+        List l1 = new ArrayList();
+        l1.add(new People("A", 10));
+        l1.add(new People("B", 30));
+        l1.add(new People("C", 30));
+        l1.add(new People("D", 30));
+        l1.add(new People("E", 42));
+        System.out.println(JSON.toJSON(l1.toArray()));
+        System.out.println("000000000000000000");
+        System.out.println(JSON.toJSON(l1.toArray(new People[l1.size()])));
     }
 
     private static void testCompletableFuture() {
@@ -88,6 +102,10 @@ public class Test8 {
         String a = "c";
         boolean r = a.compareTo("b") > 0;
         System.out.println(r);
+        BigDecimal b1 = new BigDecimal(10.2);
+        System.out.println("b1.compareTo(BigDecimal.ZERO) : "+b1.compareTo(BigDecimal.ZERO));
+        System.out.println("b1.compareTo(new BigDecimal(10.2)) : "+b1.compareTo(new BigDecimal(10.2)));
+        System.out.println("b1.compareTo(new BigDecimal(10.3)) : "+b1.compareTo(new BigDecimal(10.3)));
         System.out.println("|||||||||||||||||||||||||||||||||testcompareTo||||||||||||||||||||||||||||||||");
 
     }
@@ -95,15 +113,22 @@ public class Test8 {
     private static void testUnaryOperator() {
         UnaryOperator<Integer> unaryOperator = x -> x + 10;
         BinaryOperator<Integer> binaryOperator = (x, y) -> x + y;
-
         System.out.println(unaryOperator.apply(10)); //20
         System.out.println(binaryOperator.apply(5, 10)); //15
-
         //继续看看BinaryOperator提供的两个静态方法   也挺好用的
         BinaryOperator<Integer> min = BinaryOperator.minBy(Integer::compare);
         BinaryOperator<Integer> max = BinaryOperator.maxBy(Integer::compareTo);
         System.out.println("min.apply : " + min.apply(10, 20)); //10
         System.out.println("max.apply : " + max.apply(10, 20)); //20
+
+        BinaryOperator<BigDecimal> minD= BinaryOperator.minBy(BigDecimal::compareTo);
+        //BigDecimal.ROUND_DOWN 直接去掉多余的位数
+        //BigDecimal.ROUND_UP 进位处理
+        //BigDecimal.ROUND_CEILING 正数进位向上，负数舍位向上
+        //BigDecimal.ROUND_FLOOR 正数舍位向下，负数进位向下
+        //BigDecimal.ROUND_HALF_UP 四舍五入（若舍弃部分>=.5，就进位）
+        //BigDecimal.ROUND_HALF_DOWN 四舍五入（若舍弃部分>.5,就进位）
+        System.out.println("BigDecimal minD : "+minD.apply(new BigDecimal(10.2).setScale(2, RoundingMode.HALF_UP), new BigDecimal(10.3).setScale(3,BigDecimal.ROUND_DOWN)));
         System.out.println("|||||||||||||||||||||||||||||||||testUnaryOperator||||||||||||||||||||||||||||||||");
     }
 

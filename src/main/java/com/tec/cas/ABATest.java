@@ -79,5 +79,6 @@ public class ABATest {
 
         refT1.start();
         refT2.start();
+        System.out.println(atomicStampedRef.getStamp());
     }
 }
