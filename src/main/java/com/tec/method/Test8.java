@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tec.file.Person;
 import javafx.util.Pair;
+import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
@@ -50,6 +51,17 @@ public class Test8 {
         testcompareTo();
         testCompletableFuture();
         testListToArray();
+        testAssert();
+    }
+
+    private static void testAssert() {
+//        Assert.isTrue(true,"true");
+//        Assert.isTrue(false,"false");
+        Assert.isNull(null,"is null");
+        //Exception in thread "main" java.lang.IllegalArgumentException: is not null
+//        Assert.isNull(new People(),"is not null");
+        //Exception in thread "main" java.lang.IllegalArgumentException: must not null
+//        Assert.notNull(null,"must not null");
     }
 
     private static void testListToArray() {
@@ -73,7 +85,7 @@ public class Test8 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return new People("jason",10);
+            return new People("jason", 10);
         });
         CompletableFuture<People> completableFuture1 = CompletableFuture.supplyAsync(() -> {
             try {
@@ -81,7 +93,7 @@ public class Test8 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return new People("harry",20);
+            return new People("harry", 20);
         });
         CompletableFuture.allOf(completableFuture, completableFuture1);
         stopWatch.stop();
@@ -103,9 +115,9 @@ public class Test8 {
         boolean r = a.compareTo("b") > 0;
         System.out.println(r);
         BigDecimal b1 = new BigDecimal(10.2);
-        System.out.println("b1.compareTo(BigDecimal.ZERO) : "+b1.compareTo(BigDecimal.ZERO));
-        System.out.println("b1.compareTo(new BigDecimal(10.2)) : "+b1.compareTo(new BigDecimal(10.2)));
-        System.out.println("b1.compareTo(new BigDecimal(10.3)) : "+b1.compareTo(new BigDecimal(10.3)));
+        System.out.println("b1.compareTo(BigDecimal.ZERO) : " + b1.compareTo(BigDecimal.ZERO));
+        System.out.println("b1.compareTo(new BigDecimal(10.2)) : " + b1.compareTo(new BigDecimal(10.2)));
+        System.out.println("b1.compareTo(new BigDecimal(10.3)) : " + b1.compareTo(new BigDecimal(10.3)));
         System.out.println("|||||||||||||||||||||||||||||||||testcompareTo||||||||||||||||||||||||||||||||");
 
     }
@@ -120,15 +132,24 @@ public class Test8 {
         BinaryOperator<Integer> max = BinaryOperator.maxBy(Integer::compareTo);
         System.out.println("min.apply : " + min.apply(10, 20)); //10
         System.out.println("max.apply : " + max.apply(10, 20)); //20
+        TernaryFunction<Integer, Integer, Integer, Integer> three = (x, y, z) -> x + y * z;
+        System.out.println("TernaryFunction" + three.apply(2, 3, 4));
 
-        BinaryOperator<BigDecimal> minD= BinaryOperator.minBy(BigDecimal::compareTo);
+        BinaryOperator<BigDecimal> minD = BinaryOperator.minBy(BigDecimal::compareTo);
         //BigDecimal.ROUND_DOWN 直接去掉多余的位数
         //BigDecimal.ROUND_UP 进位处理
         //BigDecimal.ROUND_CEILING 正数进位向上，负数舍位向上
         //BigDecimal.ROUND_FLOOR 正数舍位向下，负数进位向下
         //BigDecimal.ROUND_HALF_UP 四舍五入（若舍弃部分>=.5，就进位）
         //BigDecimal.ROUND_HALF_DOWN 四舍五入（若舍弃部分>.5,就进位）
-        System.out.println("BigDecimal minD : "+minD.apply(new BigDecimal(10.2).setScale(2, RoundingMode.HALF_UP), new BigDecimal(10.3).setScale(3,BigDecimal.ROUND_DOWN)));
+        System.out.println("BigDecimal minD : " + minD.apply(new BigDecimal(10.2).setScale(2, RoundingMode.HALF_UP), new BigDecimal(10.3).setScale(3, BigDecimal.ROUND_DOWN)));
+        BigDecimal negate = new BigDecimal(10.12313);
+        System.out.println("negate.negate() : " + negate.negate());
+        System.out.println(new BigDecimal(10.123).subtract(negate.negate()));
+
+        BigDecimal a1 = new BigDecimal(20.1);
+        BigDecimal a2 = new BigDecimal(30.1);
+        System.out.println(a1.subtract(a2).compareTo(BigDecimal.ZERO)<1);
         System.out.println("|||||||||||||||||||||||||||||||||testUnaryOperator||||||||||||||||||||||||||||||||");
     }
 
@@ -152,18 +173,18 @@ public class Test8 {
         l2.addAll(l1);
         l2.sort(Comparator.comparing(People::getAge));
         System.out.println("正序排名为:" + (l2.indexOf(people) + 1));
-        List<People> newSorted =  (List<People>)l1.stream().sorted(Comparator.comparing(People::getAge).thenComparing((People::getName))).collect(Collectors.toList());
+        List<People> newSorted = (List<People>) l1.stream().sorted(Comparator.comparing(People::getAge).thenComparing((People::getName))).collect(Collectors.toList());
         DoubleList doubleList = new DoubleList();
         doubleList.setStatusList(Arrays.asList(1, 2, 3, 4, 5));
         doubleList.setIds(Arrays.asList(11L, 12L, 15L));
         System.out.println(JSON.toJSON(doubleList));
 
-        System.out.println("按照两个字段正排： "+(newSorted.indexOf(people)+1));
+        System.out.println("按照两个字段正排： " + (newSorted.indexOf(people) + 1));
         System.out.println("|||||||||||||||||||||||||||||||||testComparator||||||||||||||||||||||||||||||||");
     }
 
     private static void testJoin() {
-        StringJoiner sj = new StringJoiner("\",\"", "[\"", "\"]");
+        StringJoiner sj = new StringJoiner(",", "[", "]");
         sj.add("JASON").add("TOM").add("Everything");
         String desiredString = sj.toString();
         //["JASON","TOM","Everything"]
