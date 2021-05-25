@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.tec.file.Person;
 import javafx.util.Pair;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 
@@ -52,16 +53,62 @@ public class Test8 {
         testCompletableFuture();
         testListToArray();
         testAssert();
+        testPartitioningBy();
+        testReturn();
+    }
+
+    private static int testReturn() {
+        System.out.println("StringUtils.isAllBlank(\"1\",null)" + StringUtils.isAllBlank("1", null));
+        System.out.println("StringUtils.isAllBlank(null,null)" + StringUtils.isAllBlank(null, null));
+        try {
+            int a = 1 / 0;
+            return a;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return -1;
+        } finally {
+            System.out.println("finally 执行");
+        }
+    }
+
+    private static void testPartitioningBy() {
+        Stream<String> stream = Stream.of("Alen", "Hebe", "Zebe", "张成瑶", "钟其林");
+        final Map<Boolean, List<String>> map = stream.collect(Collectors.partitioningBy(s -> {
+            int code = s.codePointAt(0);
+            return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+        }));
+        map.forEach((k, v) -> {
+            if (k) {
+                System.out.println("英文名称如下：");
+                v.forEach(vv -> System.out.println("\t" + vv));
+            } else {
+                System.out.println("中文名称如下：");
+                v.forEach(vv -> System.out.println("\t" + vv));
+            }
+//            v.forEach(vv -> System.out.println("\t" + vv));
+        });
+
+        try {
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("Thread.currentThread().interrupt() finally 执行");
+        }
+
+        System.out.println("|||||||||||||||||||||||||||||||||testPartitioningBy||||||||||||||||||||||||||||||||");
     }
 
     private static void testAssert() {
 //        Assert.isTrue(true,"true");
 //        Assert.isTrue(false,"false");
-        Assert.isNull(null,"is null");
+        Assert.isNull(null, "is null");
         //Exception in thread "main" java.lang.IllegalArgumentException: is not null
 //        Assert.isNull(new People(),"is not null");
         //Exception in thread "main" java.lang.IllegalArgumentException: must not null
 //        Assert.notNull(null,"must not null");
+        System.out.println("|||||||||||||||||||||||||||||||||testAssert||||||||||||||||||||||||||||||||");
+
     }
 
     private static void testListToArray() {
@@ -74,6 +121,8 @@ public class Test8 {
         System.out.println(JSON.toJSON(l1.toArray()));
         System.out.println("000000000000000000");
         System.out.println(JSON.toJSON(l1.toArray(new People[l1.size()])));
+        System.out.println("|||||||||||||||||||||||||||||||||testListToArray||||||||||||||||||||||||||||||||");
+
     }
 
     private static void testCompletableFuture() {
@@ -149,7 +198,7 @@ public class Test8 {
 
         BigDecimal a1 = new BigDecimal(20.1);
         BigDecimal a2 = new BigDecimal(30.1);
-        System.out.println(a1.subtract(a2).compareTo(BigDecimal.ZERO)<1);
+        System.out.println(a1.subtract(a2).compareTo(BigDecimal.ZERO) < 1);
         System.out.println("|||||||||||||||||||||||||||||||||testUnaryOperator||||||||||||||||||||||||||||||||");
     }
 
@@ -200,7 +249,8 @@ public class Test8 {
     }
 
     private static void testSummarizingInt() {
-        List<People> peopleList = Arrays.asList(new People("jason", 79)
+        List<People> peopleList = Arrays.asList(
+                new People("jason", 79)
                 , new People("jason", 90)
                 , new People("Hanna", 98));
         int size = peopleList.stream().collect(Collectors.groupingBy(People::getName)).size();
@@ -237,12 +287,19 @@ public class Test8 {
 
 
     private static void testGroupingBy() {
-        List<User> users = Arrays.asList(new User("zhangsan", 20, "TJ"),
+        List<User> users = Arrays.asList(
+                new User("zhangsan", 20, "TJ"),
                 new User("wangwu", 30, "BJ"),
                 new User("heliu", 30, "NJ"),
-                new User("guijiaoqi", 30, "NJ"));
-
-
+                new User("zhaosi", 40, "LN"),
+                new User("ningqi", 40, "LN"),
+                new User("heliu", 32, "NJ"));
+        Map<String, Integer> map = new HashMap();
+        users.forEach(user -> map.merge(user.getName()+user.getCityName(), user.getAge(), Integer::sum));
+//        users.forEach(user -> map.merge(user.getName()+user.getCityName(), user.getAge(), (n1,n2)->n1+n2));
+        System.out.println("merge map : " + map);
+        Map<String, List<User>> collect4 = users.stream().collect(Collectors.groupingBy(user -> user.getName() + user.getCityName()));
+        System.out.println("Map<String, Long> 多个字段GroupingBy ：" + JSON.toJSONString(collect4)+"size : "+collect4.size());
         TreeMap<String, Set<String>> collect1 = users.stream().collect(Collectors.groupingBy(User::getCityName, TreeMap::new,
                 Collectors.mapping(User::getName, Collectors.toSet())));
         System.out.println("collect1 :" + collect1);
@@ -640,7 +697,6 @@ public class Test8 {
     }
 
     public <T> void testClass(T t, List<? extends T> list, List<? super People> listP) {
-
     }
 
     /**
@@ -722,7 +778,7 @@ public class Test8 {
         names.stream().map((n2) -> n2.toLowerCase()).collect(Collectors.toList());
         names.stream().map(String::toLowerCase).collect(Collectors.toList());
         System.out.println(Optional.ofNullable(null).orElse(10));
-
+        names.stream().collect(Collectors.joining(""));
         consumer1.accept("asdf");
         Supplier<Integer> integerSupplier = () -> new Random().nextInt();
         integerSupplier.get();
@@ -730,6 +786,7 @@ public class Test8 {
         //parallelStream多线程输出
         numbers.parallelStream().forEach(System.out::println);
         IntStream.range(0, 10).forEach(System.out::println);
+        System.out.println(numbers.stream().distinct().collect(Collectors.toList()).hashCode());
         System.out.println("|||||||||||||||||||||||||||||||||||||testLambda||||||||||||||||||||||||");
 
     }
