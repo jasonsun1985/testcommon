@@ -5,13 +5,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.tec.file.Person;
 import javafx.util.Pair;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -55,6 +60,57 @@ public class Test8 {
         testAssert();
         testPartitioningBy();
         testReturn();
+        testBeanUtils();
+    }
+
+    private static void testBeanUtils() {
+        String substring = "19";
+        System.out.println("substring"+substring.substring(0, 2));
+        String str = "sunlei4";
+        List<String> collect1 = Arrays.stream(str.split("\\|")).collect(Collectors.toList()).stream().map(s -> s + "@fehorizon.com").collect(Collectors.toList());
+        System.out.println(JSON.toJSONString(collect1.stream().toArray(String[]::new)));
+        NumberFormat nf = NumberFormat.getPercentInstance();
+        nf.setMinimumFractionDigits(2); // 设置两位小数位
+        double result = (double) 31 / 45;
+        System.out.println(nf.format(result));
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, -1);
+        String startDate = simpleDateFormat.format(calendar.getTime());
+        String endDate = simpleDateFormat.format(date);
+        System.out.println(startDate);
+        System.out.println(endDate);
+        System.out.println(LocalDateTime.of(LocalDate.now().minusDays(365), LocalTime.MIN).toString());
+        Employee e = null;
+        if (e==null||e.getName()==null){
+            System.out.println("条件前面符合及进入if方法");
+        }
+        Employee employee = new Employee();
+        employee.setName("sl");
+        employee.setAge(19);
+        List<Address> listAddress = new ArrayList<>();
+        Address address = new Address();
+        address.setCode(300000);
+        address.setValue("滨海");
+        listAddress.add(address);
+        Address address2 = new Address();
+        address2.setCode(300200);
+        address2.setValue("市区");
+        listAddress.add(address2);
+        employee.setListAddress(listAddress);
+        Employee target = new Employee();
+        BeanUtils.copyProperties(employee,target);
+        System.out.println(JSON.toJSONString(target));
+        List<String> l = new ArrayList<>();
+        l.add("a");
+        l.add("b");
+        System.out.println(l.indexOf("c"));
+        System.out.println(l.indexOf("a"));
+        System.out.println("|||||||||||||||||||||||||||||||||testBeanUtils||||||||||||||||||||||||||||||||");
     }
 
     private static int testReturn() {
@@ -583,6 +639,44 @@ public class Test8 {
     }
 
     private static void testFlatMap() {
+        Employee employee = new Employee();
+        employee.setName("sl");
+        employee.setAge(19);
+        List<Address> listAddress = new ArrayList<>();
+        Address address = new Address();
+        address.setCode(300000);
+        address.setValue("滨海");
+        listAddress.add(address);
+        Address address2 = new Address();
+        address2.setCode(300200);
+        address2.setValue("市区");
+        listAddress.add(address2);
+        employee.setListAddress(listAddress);
+
+        Employee target = new Employee();
+        target.setName("test");
+        target.setAge(4);
+        List<Address> listAddress2 = new ArrayList<>();
+        Address address3 = new Address();
+        address3.setCode(302000);
+        address3.setValue("市民广场");
+        listAddress2.add(address3);
+        Address address4 = new Address();
+        address4.setCode(310200);
+        address4.setValue("市区");
+        listAddress2.add(address4);
+        target.setListAddress(listAddress2);
+
+
+        List<Employee> list = new ArrayList<>();
+        list.add(employee);
+        list.add(target);
+        System.out.println(JSON.toJSONString(list));
+        //[{"age":19,"listAddress":[{"code":300000,"value":"滨海"},{"code":300200,"value":"市区"}],"name":"sl"},{"age":4,"listAddress":[{"code":302000,"value":"市民广场"},{"code":310200,"value":"市区"}],"name":"test"}]
+        List<Address> collect1 = list.stream().flatMap(e -> e.getListAddress().stream()).collect(Collectors.toList());
+        //[{"code":300000,"value":"滨海"},{"code":300200,"value":"市区"},{"code":302000,"value":"市民广场"},{"code":310200,"value":"市区"}]
+        System.out.println("flatMap new List " + JSON.toJSONString(collect1));
+
         List<String> words = Arrays.asList("hello world", "hello java", "hello hello");
         words.stream().flatMap(w -> {
             return Stream.of(w + " copy");
