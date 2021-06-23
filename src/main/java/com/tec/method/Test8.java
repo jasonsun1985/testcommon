@@ -61,6 +61,27 @@ public class Test8 {
         testPartitioningBy();
         testReturn();
         testBeanUtils();
+        testComputeIfAbsent();
+    }
+
+    private static void testComputeIfAbsent() {
+        // 创建一个 HashMap
+        HashMap<String, Integer> prices = new HashMap<>();
+        // 往HashMap中添加映射项
+        prices.put("Shoes", 200);
+        prices.put("Bag", 300);
+        prices.put("Pant", 150);
+        System.out.println("HashMap: " + prices);
+        // 计算 Shirt 的值
+        int shirtPrice = prices.computeIfAbsent("Shirt", key -> 280);
+        //Updated HashMap: {Pant=150, Shirt=280, Bag=300, Shoes=200}
+        System.out.println("Price of Shirt: " + shirtPrice);
+        int Shoes = prices.computeIfAbsent("Shoes", key -> 280);
+        //Price of Shoes: 200
+        System.out.println("Price of Shoes: " + Shoes);
+        // 输出更新后的HashMap
+        System.out.println("Updated HashMap: " + prices);
+        System.out.println("|||||||||||||||||||||||||||||||||testComputeIfAbsent||||||||||||||||||||||||||||||||");
     }
 
     private static void testBeanUtils() {
@@ -110,6 +131,9 @@ public class Test8 {
         l.add("b");
         System.out.println(l.indexOf("c"));
         System.out.println(l.indexOf("a"));
+
+        BigDecimal b1 = new BigDecimal(1);
+        System.out.println(BigDecimal.ZERO.compareTo(b1) <= 0);
         System.out.println("|||||||||||||||||||||||||||||||||testBeanUtils||||||||||||||||||||||||||||||||");
     }
 
@@ -310,6 +334,8 @@ public class Test8 {
                 , new People("jason", 90)
                 , new People("Hanna", 98));
         int size = peopleList.stream().collect(Collectors.groupingBy(People::getName)).size();
+        Map<String, Long> collect = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.counting()));
+        System.out.println("Collectors.counting() : " + collect);
         //peopleList :2
         System.out.println("peopleList :" + peopleList.size());
         //peopleList grouping by:1
@@ -374,6 +400,13 @@ public class Test8 {
 
         Map<String, Map<String, IntSummaryStatistics>> collect2 = peopleList.stream().collect(Collectors.groupingBy(People::getName, Collectors.groupingBy(People::getName, Collectors.summarizingInt(People::getAge))));
         System.out.println("collect2 : " + collect2);
+
+
+        Integer integer = users.stream().map(User::getAge).reduce(Integer::sum).orElse(0);
+        Integer integer1 = users.stream().map(User::getAge).reduce(Integer::sum).get();
+
+        System.out.println(integer);
+        System.out.println(integer1);
         System.out.println("|||||||||||||||||||||||||||||||||testGroupingBy||||||||||||||||||||||||||||");
     }
 
