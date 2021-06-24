@@ -62,6 +62,27 @@ public class Test8 {
         testReturn();
         testBeanUtils();
         testComputeIfAbsent();
+        testStopWatch();
+    }
+
+    private static void testStopWatch() {
+        StopWatch sw = new StopWatch("aaaaaaa");
+        sw.start("task1");
+        extracted();
+        sw.stop();
+
+        sw.start("task2");
+        extracted();
+        sw.stop();
+        System.out.println(sw.prettyPrint());
+        System.out.println("|||||||||||||||||||||||||||||||||testStopWatch||||||||||||||||||||||||||||||||");
+
+    }
+
+    private static void extracted() {
+        for (int i = 0; i <100000 ; i++) {
+            System.out.println(new Random().nextInt(10));
+        }
     }
 
     private static void testComputeIfAbsent() {
@@ -86,7 +107,7 @@ public class Test8 {
 
     private static void testBeanUtils() {
         String substring = "19";
-        System.out.println("substring"+substring.substring(0, 2));
+        System.out.println("substring" + substring.substring(0, 2));
         String str = "sunlei4";
         List<String> collect1 = Arrays.stream(str.split("\\|")).collect(Collectors.toList()).stream().map(s -> s + "@fehorizon.com").collect(Collectors.toList());
         System.out.println(JSON.toJSONString(collect1.stream().toArray(String[]::new)));
@@ -107,7 +128,7 @@ public class Test8 {
         System.out.println(endDate);
         System.out.println(LocalDateTime.of(LocalDate.now().minusDays(365), LocalTime.MIN).toString());
         Employee e = null;
-        if (e==null||e.getName()==null){
+        if (e == null || e.getName() == null) {
             System.out.println("条件前面符合及进入if方法");
         }
         Employee employee = new Employee();
@@ -124,7 +145,7 @@ public class Test8 {
         listAddress.add(address2);
         employee.setListAddress(listAddress);
         Employee target = new Employee();
-        BeanUtils.copyProperties(employee,target);
+        BeanUtils.copyProperties(employee, target);
         System.out.println(JSON.toJSONString(target));
         List<String> l = new ArrayList<>();
         l.add("a");
@@ -377,11 +398,11 @@ public class Test8 {
                 new User("ningqi", 40, "LN"),
                 new User("heliu", 32, "NJ"));
         Map<String, Integer> map = new HashMap();
-        users.forEach(user -> map.merge(user.getName()+user.getCityName(), user.getAge(), Integer::sum));
+        users.forEach(user -> map.merge(user.getName() + user.getCityName(), user.getAge(), Integer::sum));
 //        users.forEach(user -> map.merge(user.getName()+user.getCityName(), user.getAge(), (n1,n2)->n1+n2));
         System.out.println("merge map : " + map);
         Map<String, List<User>> collect4 = users.stream().collect(Collectors.groupingBy(user -> user.getName() + user.getCityName()));
-        System.out.println("Map<String, Long> 多个字段GroupingBy ：" + JSON.toJSONString(collect4)+"size : "+collect4.size());
+        System.out.println("Map<String, Long> 多个字段GroupingBy ：" + JSON.toJSONString(collect4) + "size : " + collect4.size());
         TreeMap<String, Set<String>> collect1 = users.stream().collect(Collectors.groupingBy(User::getCityName, TreeMap::new,
                 Collectors.mapping(User::getName, Collectors.toSet())));
         System.out.println("collect1 :" + collect1);
