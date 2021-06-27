@@ -1,5 +1,9 @@
 package com.tec.method;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * @author SUNLEI
  * @version V1.0
@@ -8,31 +12,11 @@ package com.tec.method;
  * </p>
  * @see
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Dish {
-    private final String name;
-    private final boolean vegetarian;
-    private final int calories;
-
-    public Dish(String name, boolean vegetarian, int calories) {
-        this.name = name;
-        this.vegetarian = vegetarian;
-        this.calories = calories;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isVegetarian() {
-        return vegetarian;
-    }
-
-    public int getCalories() {
-        return calories;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
+    private String name;
+    private Boolean vegetarian;
+    private Integer calories;
 }

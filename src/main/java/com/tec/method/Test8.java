@@ -32,6 +32,7 @@ public class Test8 {
         testisPresent();
         testDistinct();
         testMap();
+        testMapMerge();
         testLimit();
         testSkip();
         testComprehensive();
@@ -63,6 +64,45 @@ public class Test8 {
         testBeanUtils();
         testComputeIfAbsent();
         testStopWatch();
+    }
+
+    private static void testMapMerge() {
+        List<Dish> menu1 = new ArrayList<>();
+        Dish d1 = new Dish();
+        d1.setName("pork");
+        d1.setCalories(800);
+        menu1.add(d1);
+        Dish d2 = new Dish();
+        d2.setName("beef");
+        d2.setCalories(700);
+        menu1.add(d2);
+
+        List<Dish> menu2 = new ArrayList<>();
+        Dish d11 = new Dish();
+        d11.setName("pork");
+        d11.setVegetarian(false);
+        menu2.add(d11);
+        Dish d22 = new Dish();
+        d22.setName("beef");
+        d22.setVegetarian(false);
+        menu2.add(d22);
+        System.out.println(menu1);
+        System.out.println(menu2);
+        //针对两个list进行merge
+        Map<String, Dish> m1 = menu1.stream().collect(Collectors.toMap(Dish::getName, dish -> dish));
+        System.out.println("m1:"+m1);
+
+        Map<String, Dish> m2 = menu2.stream().collect(Collectors.toMap(Dish::getName, dish -> dish));
+        System.out.println("m2:"+m2);
+        m1.forEach((s, dish) -> {
+            Dish tempDish = m2.get(s);
+            tempDish.setCalories(dish.getCalories());
+        });
+        System.out.println(m2);
+        List<Dish> resultDish = m2.values().stream().collect(Collectors.toList());
+        System.out.println(resultDish);
+        System.out.println("|||||||||||||||||||||||||||||||||testMapMerge||||||||||||||||||||||||||||||||");
+
     }
 
     private static void testStopWatch() {
