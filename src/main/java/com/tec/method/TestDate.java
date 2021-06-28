@@ -2,6 +2,7 @@ package com.tec.method;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
@@ -42,11 +43,15 @@ public class TestDate {
         System.out.println(LocalDate.now().with(DayOfWeek.MONDAY).getDayOfWeek().getValue());
         System.out.println(LocalDate.now().getDayOfWeek().getValue());
         //本月第一天
-        LocalDate firstday = LocalDate.of(localDate.getYear(), localDate.getMonthValue(), 1);
-        System.out.println("firstday:"+firstday);
+        LocalDate firstDayOfMonth = LocalDate.of(localDate.getYear(), localDate.getMonthValue(), 1);
+        System.out.println("firstday:"+firstDayOfMonth);
         //本月的最后一天
         LocalDate lastDay = localDate.with(TemporalAdjusters.lastDayOfMonth());
         System.out.println("lastDay:"+lastDay);
+
+        Period between = Period.between(firstDayOfMonth, now);
+        System.out.println("相隔几天：" + between.getDays());
+
 
     }
 }
