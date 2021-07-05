@@ -370,6 +370,11 @@ public class Test8 {
         System.out.println(JSON.toJSON(doubleList));
 
         System.out.println("按照两个字段正排： " + (newSorted.indexOf(people) + 1));
+
+        People p1 = new People("A", 30);
+        People p2 = new People("A", 30);
+        System.out.println("p1.equals(p2):" + p1.equals(p2));
+        System.out.println("(p1==p2):" + (p1 == p2));
         System.out.println("|||||||||||||||||||||||||||||||||testComparator||||||||||||||||||||||||||||||||");
     }
 
